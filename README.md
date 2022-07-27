@@ -113,3 +113,5 @@ function App(props) {
 # useReducer()钩子函数
 
 作用：是另一种让函数组件保存状态的方式。
+
+优点：不需要向子组件传递修改数据的方法，子组件使用dispacth触发action即可。

@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useReducer } from "react";
 
 function App(props) {
-  const [count, setCount] = useState(() => {
-    return props.count || 0;
-  });
+  function reducer(state, action) {
+    switch (action.type) {
+      case "increment":
+        return state + 1;
+      default:
+        return state;
+    }
+  }
 
-  const handleCount = () => {
-    setCount((count) => {
-      return count + 1;
-    });
-  };
+  const [count, dispacth] = useReducer(reducer, 0);
+
   return (
     <div>
       <span>{count}</span>
-      <button onClick={handleCount}>+1</button>
+      <button
+        onClick={() => {
+          dispacth({ type: "increment" });
+        }}
+      >
+        +1
+      </button>
     </div>
   );
 }
