@@ -1,70 +1,27 @@
-# Getting Started with Create React App
+# React Hooks 是什么？
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+hooks本质是函数。
 
-## Available Scripts
+作用是：让开发者在不使用类组件的情况下，能使用类似类组件拥有的功能。比如说`让函数组件拥有存储状态和处理副作用的能力`。
 
-In the project directory, you can run:
+# 什么是副作用？
 
-### `yarn start`
+在一个组件中，只要不是把数据转换成视图的代码，就属于副作用。比如说获取dom元素，为dom元素添加事件，设置定时器，以及发送ajaxi请求等。
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+在类组件中我们通常使用生命周期函数来处理这些副作用。在函数型组件中我们就需要使用hooks来处理这些副作用。
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# 类组件的不足（也是hooks的优势）
 
-### `yarn test`
+1. 缺少组件复用的机制
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. 类组件经常会变得很复杂很难以维护 （一组相关的逻辑要拆分到各个生命周期函数里去；而不相干的逻辑经常要写在同一个生命周期函数中）
 
-### `yarn build`
+3. 类成员方法不能保证this指向的正确性。
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# useState()钩子函数
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+这个函数的功能，是为了让函数型组件，能够保存组件状态。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+在我们现有的认知里，一个函数里面的变量，在这个函数被执行完成之后，里面的变量就会被释放掉了。所以函数组件原本是不可用保存状态数据的。
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+useState()钩子函数内部是使用闭包来保存状态的。
