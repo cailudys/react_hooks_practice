@@ -115,3 +115,66 @@ function App(props) {
 作用：是另一种让函数组件保存状态的方式。
 
 优点：不需要向子组件传递修改数据的方法，子组件使用dispacth触发action即可。
+
+# useContext()钩子函数
+
+作用：是用来简化代码的，当我们使用context跨组件层级传递数据时，简化获取数据的代码。
+
+###### 最初的使用context跨组件层级传递数据
+
+```js
+import React, { createContext, useContext } from "react";
+
+// 实例化一个context对象
+const countContext = createContext();
+
+function App(props) {
+  return (
+    <countContext.Provider value={100}>
+      <Foo></Foo>
+    </countContext.Provider>
+  );
+}
+
+// 
+// Foo子组件 获取context中的内容
+function Foo(props) {
+  return (
+    <countContext.Consumer>
+      {(value) => {
+        // 在这个函数里里可以获取到数据，视图也要在这里return出去
+        return <div>{value}</div>;
+      }}
+    </countContext.Consumer>
+  );
+}
+
+export default App;
+```
+
+###### 使用useContext()钩子函数简化代码后的
+
+```js
+import React, { createContext, useContext } from "react";
+
+// 实例化一个context对象
+const countContext = createContext();
+
+function App(props) {
+  return (
+    <countContext.Provider value={100}>
+      <Foo></Foo>
+    </countContext.Provider>
+  );
+}
+
+// Foo子组件 获取context中的内容
+function Foo(props) {
+   // 每次渲染都会重新获取一遍 value，所以没有问题。
+  const value = useContext(countContext);
+  return <div>{value}</div>;
+}
+
+export default App;
+```
+
