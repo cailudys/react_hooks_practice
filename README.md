@@ -25,3 +25,91 @@ hooks本质是函数。
 在我们现有的认知里，一个函数里面的变量，在这个函数被执行完成之后，里面的变量就会被释放掉了。所以函数组件原本是不可用保存状态数据的。
 
 useState()钩子函数内部是使用闭包来保存状态的。
+
+###### useState()钩子函数细节总结：
+
+> 1. useState()钩子函数只接收一个参数；这个参数可以是一个`任意类型的值`也可以是一个`函数`；
+> 2. 当往useState()钩子函数中传递一个函数时；这个函数的返回值就会被设置为此状态的初始值；且这个函数只会在组件挂载阶段被执行一次。
+> 3. 钩子函数返回值为一个数组，数组中存储了`状态值`和`更改状态值的方法`。方法约定以set开头。
+
+###### 往useState()中传递函数的场景 （初始状态时外部传递过来的）
+
+```js
+// 这是一个App组件
+function App(props) {
+  // 假如初始值不确定，是外部传过来的。我们可以如下写：
+  const propsCount = props.count || 0;
+  // 这样写有个问题，每当点击之后，这个App函数会重新执行一次，所以上面那段代码每次渲染也会被重新执行
+  // 这样是完全没有意义的
+  const [count, setCount] = useState(propsCount);
+  useEffect(() => {
+    console.log(count);
+  });
+  return (
+    <div>
+      <span>{count}</span>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        +1
+      </button>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+```js
+function App(props) {
+  // 传递到useState中的函数只会在组件被挂载时执行一次。
+  const [count, setCount] = useState(()=>{
+      return props.count || 0;
+  });
+  ....
+}
+```
+
+###### 重点理解
+
+> 下面代码中的组件，第一次点击按钮，打印出来的是 初始状态 0 而不是 setCount之后的状态 1 。
+
+```js
+function App(props) {
+  const [count, setCount] = useState(() => {
+    return props.count || 0;
+  });
+  return (
+    <div>
+      <span>{count}</span>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+          // 每一次渲染，都相当于重新执行一次组件函数，每次组件函数都拥有属于它那一份的状态。
+          // 需要理解的是，当前这次渲染中设置的状态，得到下一次渲染才能拿到。当前这次渲染拿到的是上一次设置的状态，或者是初始状态。
+          console.log(count);
+        }}
+      >
+        +1
+      </button>
+    </div>
+  );
+}
+```
+
+###### 设置状态时的细节点
+
+当我们设置状态时，我们可以之间传入一个值；也可以传入一个回调函数。
+
+当我们传递回调函数，setCount调用回调函数的时候会往回调函数中传入一个参数：这个参数指的时当前这次渲染时的状态。这个函数的返回值会用来更新状态。
+
+> 我们没有办法在当前渲染过程中`直接拿到`当前渲染过程中设置的状态。
+>
+> setCount（）本身是同步的，在合成事件函数中体现出来的样子是异步的。导致这样的原因是React的运行机制造成的。
+
+# useReducer()钩子函数
+
+作用：是另一种让函数组件保存状态的方式。
