@@ -333,3 +333,61 @@ export default App;
 ###### 2.使用useRef（）保存数据 【证明了我之前使用useRef（）保存数据不是野路子！】
 
 使用useRef保存的数据很有特点： 是跨组件周期的；即使组件重新渲染，保存的数据仍然存在（组件卸载就没了）；且保存的数据被更改不会触发组件重新渲染。（useEffect保存的数据，是状态数据，状态数据改变会触发组件重新渲染。）
+
+# 自定义hook
+
+自定义hook是标准的封装和共享逻辑的方式；自定义hook是一个函数，其名称以use开头；自定义hool其实就是逻辑和内置hook的组合。
+
+```js
+// 实现这个需求：
+// 在组件挂载完成之后，向服务器端发送一个请求，获取文章的信息。然后我们把文章的信息显示在页面当中。
+function App(props) {
+  const [post, setPost] = useState({});
+  useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts/1")
+      .then((res) => setPost(res.data));
+  }, []);
+  return (
+    <div>
+      <div>{post.title}</div>
+      <div>{post.body}</div>
+    </div>
+  );
+}
+```
+
+提取自定义hook，（提取需要重复使用的：逻辑 状态 内置hook）
+
+```js
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+// 现在我们假定，向服务器端发送请求文章的事情，也是其他组件需要做的事情。那么这个逻辑就属于共享逻辑。我们就需要把它写在自定义hook函数当中。
+function useGetPost() {
+  const [post, setPost] = useState({});
+  useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts/1")
+      .then((res) => setPost(res.data));
+  }, []);
+
+  // 这里返回啥都行，按需返回
+  return [post, setPost];
+}
+
+function App(props) {
+  const [post, setPost] = useGetPost();
+  return (
+    <div>
+      <div>{post.title}</div>
+      <div>{post.body}</div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+###### 深入理解自定义hook（另一个例子）
