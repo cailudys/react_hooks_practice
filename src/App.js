@@ -1,20 +1,37 @@
-import React, { createContext, useContext } from "react";
-
-// 实例化一个context对象
-const countContext = createContext();
+import React, { useState, useEffect } from "react";
+// 导入ReactDOM是为了使用 ReactDOM里卸载组件的方法
+import root from "./index";
 
 function App(props) {
-  return (
-    <countContext.Provider value={100}>
-      <Foo></Foo>
-    </countContext.Provider>
-  );
-}
+  const [count, setCount] = useState(0);
 
-// Foo子组件 获取context中的内容
-function Foo(props) {
-  const value = useContext(countContext);
-  return <div>{value}</div>;
+  useEffect(() => {
+    let a = "副作用1";
+    console.log(a);
+    return () => {
+      console.log(`${a}，被卸载了`);
+    };
+  });
+
+  return (
+    <div>
+      <span>{count}</span>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        +1
+      </button>
+      <button
+        onClick={() => {
+          root.unmount(document.getElementById("root"));
+        }}
+      >
+        卸载组件
+      </button>
+    </div>
+  );
 }
 
 export default App;
