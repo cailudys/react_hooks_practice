@@ -289,3 +289,47 @@ memo作用：
 ###### useCallback钩子函数的使用
 
 useCallback钩子函数，也是接收两个参数，第一个是回调函数，第二个是要检测的那个数组。
+
+```js
+function App(props) {
+  const [count, setCount] = useState(0);
+
+  const resertCount = useCallback(() => {
+    setCount(0);
+  }, [setCount]);
+
+  // const resertCount = () => {
+  //   setCount(0);
+  // };
+
+  return (
+    <div>
+      <span>{count}</span>
+      <button onClick={() => setCount(count + 1)}>+1</button>
+      <Foo resertCount={resertCount} />
+    </div>
+  );
+}
+
+const Foo = memo(function Foo(props) {
+  console.log("Foo组件重新渲染了");
+  return (
+    <div>
+      我是Foo组件
+      <button onClick={props.resertCount}>resetCount</button>
+    </div>
+  );
+});
+
+export default App;
+```
+
+# useRef（）钩子函数
+
+###### 1.使用useRef（）获取DOM元素对象
+
+我们通过调用useRef（）函数会得到一个`ref对象` , 然后在你想获取的那个DOM 元素上添加一个ref属性，并且把 `ref对象` 传递给 这个`ref属性`, 这样之后，这个DOM对象就被保存到 `ref对象的 current属性`下了。
+
+###### 2.使用useRef（）保存数据 【证明了我之前使用useRef（）保存数据不是野路子！】
+
+使用useRef保存的数据很有特点： 是跨组件周期的；即使组件重新渲染，保存的数据仍然存在（组件卸载就没了）；且保存的数据被更改不会触发组件重新渲染。（useEffect保存的数据，是状态数据，状态数据改变会触发组件重新渲染。）
