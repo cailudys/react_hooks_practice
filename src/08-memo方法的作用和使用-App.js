@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
+
+// 我们创建一个新的组件，然后用App组件包裹这个组件。
+// 然我们点击按钮，更改count状态，这时App组件会重新渲染。
+// 当App组件渲染的时候，它包裹的组件也会重新渲染。
 
 function App(props) {
   const [count, setCount] = useState(0);
+  const [count2, setCount2] = useState(0);
 
   return (
     <div>
